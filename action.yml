@@ -1,0 +1,34 @@
+name: 'GH PR Summarize'
+description: 'Auto-generates PR summaries with code change explanations, test coverage impact, and deployment risk scoring using AI'
+author: 'Alan Bradley <alan13@agentmail.to>'
+branding:
+  icon: 'sparkles'
+  color: 'blue'
+inputs:
+  github-token:
+    description: 'GitHub token (usually ${{ github.token }})'
+    required: false
+    default: '${{ github.token }}'
+  openrouter-api-key:
+    description: 'OpenRouter API key for AI model. If not provided, uses heuristic summary.'
+    required: false
+    default: ''
+  model:
+    description: 'Model to use for summarization (default: google/gemini-2.5-flash)'
+    required: false
+    default: 'google/gemini-2.5-flash'
+  max-diff-tokens:
+    description: 'Max tokens from diff to send to model (default: 8000)'
+    required: false
+    default: '8000'
+  output-format:
+    description: 'Output format: markdown or json (default: markdown)'
+    required: false
+    default: 'markdown'
+  auto-comment:
+    description: 'Comment the summary on the PR (true/false)'
+    required: false
+    default: 'true'
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

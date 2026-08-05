@@ -1,0 +1,24 @@
+# GitHub Actions config
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate action.yml
+        run: |
+          if [ -f action.yml ]; then
+            echo "action.yml exists"
+          else
+            echo "action.yml missing"
+            exit 1
+          fi
+      - name: Validate dist/index.js
+        run: |
+          if [ -f dist/index.js ]; then
+            echo "dist/index.js exists"
+          else
+            echo "dist/index.js missing"
+            exit 1
+          fi
