@@ -28,8 +28,8 @@ jobs:
         run: ls -la dist-python/
       - name: Configure PyPI
         run: |
-          mkdir -p ~/.pypirc
-          cat > ~/.pypirc << EOF
+          rm -rf ~/.pypirc
+          cat > ~/.pypirc << 'PYPIRC'
           [distutils]
           index-servers = github
 
@@ -37,7 +37,9 @@ jobs:
           repository = https://upload.pkg.github.com/${{ github.repository_owner }}
           username = ${{ github.actor }}
           password = ${{ secrets.GITHUB_TOKEN }}
-          EOF
+          PYPIRC
           cat ~/.pypirc
       - name: Publish Package
-        run: twine upload --config-file ~/.pypirc --repository github dist-python/*.tar.gz dist-python/*.whl
+        run: |
+          twine upload --config-file ~/.pypirc --repository github dist-python/*.tar.gz dist-python/*.whl
+          echo "PUBLISH_SUCCESS"
