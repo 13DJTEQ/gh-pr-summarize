@@ -1,9 +1,17 @@
 {
-  "name": "gh-pr-summarize-action",
+  "name": "@13djteq/gh-pr-summarize-action",
   "version": "1.0.0",
   "description": "Auto-generates PR summaries using AI via OpenRouter",
   "main": "dist/index.js",
   "scripts": {},
-  "keywords": ["github-action", "pr", "summarize", "ai"],
-  "license": "MIT"
+  "keywords": [
+    "github-action",
+    "pr",
+    "summarize",
+    "ai"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
 }
