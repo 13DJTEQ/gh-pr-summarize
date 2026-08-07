@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pr-summarizer-ai"
+version = "0.1.0"
+description = "AI-powered PR summarization for GitHub"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "Alan Bradley", email = "alan13@agentmail.to"}]
+license = {text = "MIT"}
+dependencies = ["requests>=2.0.0"]
+
+[project.scripts]
+pr-summarizer = "pr_summarizer.cli:main"
+
+[tool.setuptools]
+packages = ["pr_summarizer"]
