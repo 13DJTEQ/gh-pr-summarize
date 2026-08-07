@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pr-summarizer-ai"
-version = "0.1.0"
+version = "1.0.0"
 description = "AI-powered PR summarization for GitHub"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -12,8 +12,19 @@ authors = [{name = "Alan Bradley", email = "alan13@agentmail.to"}]
 license = {text = "MIT"}
 dependencies = ["requests>=2.0.0"]
 
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
+
 [project.scripts]
 pr-summarizer = "pr_summarizer.cli:main"
 
-[tool.setuptools]
-packages = ["pr_summarizer"]
+[project.urls]
+Homepage = "https://github.com/13DJTEQ/gh-pr-summarize"
+Repository = "https://github.com/13DJTEQ/gh-pr-summarize"
+
+# GitHub Packages configuration
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.setuptools.package-dir]
+pr_summarizer = "pr_summarizer"
