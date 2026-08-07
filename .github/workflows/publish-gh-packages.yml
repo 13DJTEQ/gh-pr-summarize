@@ -26,12 +26,18 @@ jobs:
           python -m build --outdir dist-python/
       - name: List dist
         run: ls -la dist-python/
-      - name: Publish Package
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Configure PyPI
         run: |
-          echo "OWNER: ${{ github.repository_owner }}"
-          twine upload --repository-url https://upload.pkg.github.com/${{ github.repository_owner }} \
-            --username ${{ github.actor }} \
-            --password "$GITHUB_TOKEN" \
-            dist-python/*.tar.gz dist-python/*.whl
+          mkdir -p ~/.pypirc
+          cat > ~/.pypirc << EOF
+          [distutils]
+          index-servers = github
+
+          [github]
+          repository = https://upload.pkg.github.com/${{ github.repository_owner }}
+          username = ${{ github.actor }}
+          password = ${{ secrets.GITHUB_TOKEN }}
+          EOF
+          cat ~/.pypirc
+      - name: Publish Package
+        run: twine upload --config-file ~/.pypirc --repository github dist-python/*.tar.gz dist-python/*.whl
