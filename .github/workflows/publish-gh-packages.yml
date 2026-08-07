@@ -21,16 +21,17 @@ jobs:
       - name: Install build tools
         run: python -m pip install --upgrade build twine
       - name: Build package
-        run: python -m build --outdir dist/
-      - name: Show dist contents
-        run: ls -la dist/
+        run: |
+          mkdir -p dist-python
+          python -m build --outdir dist-python/
+      - name: List dist
+        run: ls -la dist-python/
       - name: Publish Package
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "OWNER: ${{ github.repository_owner }}"
-          echo "ACTOR: ${{ github.actor }}"
           twine upload --repository-url https://upload.pkg.github.com/${{ github.repository_owner }} \
             --username ${{ github.actor }} \
             --password "$GITHUB_TOKEN" \
-            dist/* 2>&1 || true
+            dist-python/*.tar.gz dist-python/*.whl
