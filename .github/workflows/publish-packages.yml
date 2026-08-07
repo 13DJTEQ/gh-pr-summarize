@@ -1,0 +1,62 @@
+name: Publish Packages
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  # Publish npm package to GitHub Packages
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+      - name: Publish npm package
+        run: |
+          npm publish --access public --registry https://npm.pkg.github.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Publish Python package to GitHub Packages
+  publish-python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install build tools
+        run: python -m pip install --upgrade build twine
+      - name: Build package
+        run: |
+          mkdir -p dist-python
+          python -m build --outdir dist-python/
+      - name: List dist
+        run: ls -la dist-python/
+      - name: Configure PyPI
+        run: |
+          rm -rf ~/.pypirc
+          cat > ~/.pypirc << 'PYPIRC'
+          [distutils]
+          index-servers = github
+
+          [github]
+          repository = https://upload.pkg.github.com/${{ github.repository }}
+          username = ${{ github.actor }}
+          password = ${{ secrets.GITHUB_TOKEN }}
+          PYPIRC
+          cat ~/.pypirc
+      - name: Publish Package
+        run: |
+          twine upload --config-file ~/.pypirc --repository github dist-python/*.tar.gz dist-python/*.whl
