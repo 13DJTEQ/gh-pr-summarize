@@ -37,11 +37,11 @@
                     "env": {
                         "GITHUB_TOKEN": "${{ secrets.GITHUB_TOKEN }}"
                     },
-                    "run": "twine upload --repository github dist/* --username 13DJTEQ --password $GITHUB_TOKEN"
+                    "run": "twine upload --repository-url https://upload.pkg.github.com/13DJTEQ --username 13DJTEQ --password $GITHUB_TOKEN dist/*"
                 },
                 {
                     "name": "Verify publication",
-                    "run": "echo \"Package published to GitHub Packages\""
+                    "run": "echo Package published to GitHub Packages"
                 }
             ]
         }
