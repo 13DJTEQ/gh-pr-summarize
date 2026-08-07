@@ -34,7 +34,7 @@ jobs:
           index-servers = github
 
           [github]
-          repository = https://upload.pkg.github.com/${{ github.repository }}
+          repository = https://upload.pkg.github.com/${{ github.repository_owner }}
           username = ${{ github.actor }}
           password = ${{ secrets.GITHUB_TOKEN }}
           PYPIRC
