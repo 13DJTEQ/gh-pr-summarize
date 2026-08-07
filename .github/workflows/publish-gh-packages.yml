@@ -1,35 +1,37 @@
 name: Publish to GitHub Packages
 on:
-  workflow_dispatch:
   push:
     tags:
       - "pypi-v*"
+  workflow_dispatch:
 
 permissions:
   contents: read
   packages: write
 
 jobs:
-  build-and-publish:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Install build tools
         run: python -m pip install --upgrade build twine
-      - name: Build
+      - name: Build package
         run: python -m build --outdir dist/
-      - name: List dist
+      - name: Show contents
         run: ls -la dist/
       - name: Publish to GitHub Packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          twine upload \
-            --repository-url https://upload.pkg.github.com/${{ github.repository_owner }} \
+          echo "Publishing to GitHub Packages..."
+          echo "Repository owner: ${{ github.repository_owner }}"
+          echo "Repository: ${{ github.repository }}"
+          twine upload --repository-url https://upload.pkg.github.com/${{ github.repository_owner }} \
             --username ${{ github.actor }} \
             --password $GITHUB_TOKEN \
             dist/*
