@@ -12,7 +12,6 @@ permissions:
   packages: write
 
 jobs:
-  # Publish npm package to GitHub Packages
   publish-npm:
     runs-on: ubuntu-latest
     steps:
@@ -21,19 +20,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@13djteq'
-      - name: Configure npm
+      - name: Configure npm registry
         run: |
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
           echo "@13djteq:registry=https://npm.pkg.github.com" >> ~/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "Registry configured"
+          cat ~/.npmrc | sed 's/:_authToken=.*/:_authToken=***REDACTED***/'
       - name: Publish npm package
         run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # Publish Python package to GitHub Packages
   publish-python:
     runs-on: ubuntu-latest
     steps:
@@ -60,9 +55,8 @@ jobs:
           [github]
           repository = https://upload.pkg.github.com/${{ github.repository }}
           username = ${{ github.actor }}
-          password = ${{ secrets.GITHUB_TOKEN }}
+          password = ${{ secrets.GH_PACKAGES_TOKEN }}
           PYPIRC
-          cat ~/.pypirc
       - name: Publish Package
         run: |
           twine upload --config-file ~/.pypirc --repository github dist-python/*.tar.gz dist-python/*.whl
