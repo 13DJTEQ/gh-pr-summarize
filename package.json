@@ -1,6 +1,6 @@
 {
   "name": "@13djteq/gh-pr-summarize-action",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Auto-generates PR summaries using AI via OpenRouter",
   "main": "dist/index.js",
   "scripts": {},
