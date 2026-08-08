@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "v*"
+      - "npm-v*"
   workflow_dispatch:
 
 permissions:
@@ -21,9 +22,14 @@ jobs:
         with:
           node-version: '20'
           registry-url: 'https://npm.pkg.github.com'
-      - name: Publish npm package
+          scope: '@13djteq'
+      - name: Configure npm
         run: |
-          npm publish --access public --registry https://npm.pkg.github.com
+          echo "@13djteq:registry=https://npm.pkg.github.com" >> ~/.npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish npm package
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
