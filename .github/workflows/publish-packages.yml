@@ -24,9 +24,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@13djteq'
       - name: Configure npm
-        run: |
-          echo "@13djteq:registry=https://npm.pkg.github.com" >> ~/.npmrc
-          echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
+        run: printf '//npm.pkg.github.com/:_authToken=%s\n@13djteq:registry=https://npm.pkg.github.com\n' "$NPM_TOKEN" >> "$HOME/.npmrc"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish npm package
